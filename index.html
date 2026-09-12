@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QuickServe — Hotel Order Desk</title>
+  <style>
+    :root{--ink:#172018;--muted:#6c756d;--paper:#f7f8f3;--card:#fff;--line:#dfe6dc;--green:#1f6b45;--lime:#d9eea9;--orange:#e78644;--shadow:0 16px 40px rgba(28,52,32,.08)}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+    button,input,select,textarea{font:inherit} button{cursor:pointer} .app{max-width:1440px;margin:auto;padding:22px 28px 44px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem}.brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--green);color:#fff;font-weight:800}.subtle{color:var(--muted);font-size:.84rem}
+    .role-switch{display:flex;gap:4px;background:#e8eee5;padding:4px;border-radius:12px}.role-switch button{border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:9px;font-size:.78rem;font-weight:800}.role-switch button.active{background:#fff;color:var(--green);box-shadow:0 3px 10px rgba(28,52,32,.08)}
+    .status{display:flex;align-items:center;gap:8px;background:#eaf6df;padding:8px 12px;border-radius:999px;font-size:.82rem;color:var(--green);font-weight:700}.status i{width:8px;height:8px;background:#58a95b;border-radius:50%}
+    .layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,.75fr);gap:22px;align-items:start}.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}.menu-panel{padding:26px}.order-panel{padding:22px;position:sticky;top:18px}
+    .intro{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:20px}.intro h1{font-size:clamp(1.7rem,3vw,2.7rem);line-height:1.05;margin:4px 0 8px;letter-spacing:-.05em}.intro p{max-width:58ch;margin:0;color:var(--muted)}.date{background:var(--lime);padding:10px 13px;border-radius:14px;white-space:nowrap;font-weight:700;font-size:.8rem}
+    .tabs{display:flex;gap:8px;overflow:auto;padding:3px 0 17px}.tab{border:1px solid var(--line);background:var(--paper);padding:9px 14px;border-radius:999px;color:var(--muted);white-space:nowrap}.tab.active,.tab:hover{background:var(--green);border-color:var(--green);color:white}
+    .menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.food{border:1px solid var(--line);border-radius:17px;padding:16px;display:flex;flex-direction:column;min-height:190px;transition:.2s}.food:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(28,52,32,.08);border-color:#b9cfb2}.food-top{display:flex;justify-content:space-between;gap:10px}.food h3{margin:0;font-size:1rem}.food p{margin:8px 0;color:var(--muted);font-size:.85rem}.price{font-weight:800;color:var(--green)}.veg{color:#44965a;font-size:.72rem;margin-top:10px}.add{margin-top:auto;border:0;background:var(--ink);color:#fff;border-radius:10px;padding:10px;font-weight:700}.add:hover{background:var(--green)}
+    .order-head{display:flex;justify-content:space-between;align-items:center}.order-head h2{font-size:1.25rem;margin:0}.count{background:var(--lime);border-radius:999px;padding:5px 9px;font-size:.78rem;font-weight:800}.empty{text-align:center;padding:35px 10px;color:var(--muted)}.empty strong{display:block;color:var(--ink);margin-bottom:4px}.cart-item{border-top:1px solid var(--line);padding:14px 0}.cart-line{display:flex;justify-content:space-between;gap:10px}.cart-name{font-weight:700}.cart-meta{color:var(--muted);font-size:.78rem;margin-top:3px}.remove{border:0;background:none;color:#bb5b49;padding:0;font-size:.76rem}.qty{display:flex;align-items:center;gap:8px;margin-top:9px}.qty button{width:27px;height:27px;border:1px solid var(--line);background:var(--paper);border-radius:7px}.qty span{min-width:18px;text-align:center;font-weight:700}
+    .total{display:flex;justify-content:space-between;border-top:2px solid var(--ink);margin-top:8px;padding-top:16px;font-size:1.15rem;font-weight:800}.primary{width:100%;border:0;background:var(--green);color:white;border-radius:12px;padding:13px;margin-top:16px;font-weight:800}.primary:disabled{background:#bac5bb;cursor:not-allowed}.secondary{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:10px 12px;font-weight:700}
+    .desk{margin-top:22px}.desk h2{font-size:1.2rem;margin:0}.desk-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.orders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.order-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px}.order-card h3{font-size:.95rem;margin:0}.order-card ul{padding-left:17px;color:var(--muted);font-size:.82rem}.order-card footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.badge{font-size:.72rem;font-weight:800;padding:5px 8px;border-radius:999px;background:#fff0d7;color:#a36321}.badge.done{background:#e5f4e6;color:#367d3c}.cash{font-size:.78rem;color:var(--muted)}.cash input{accent-color:var(--green)}
+    .owner-only{display:none}.owner-view .owner-only{display:block}.owner-view .customer-only{display:none}
+    .owner-view .layout{grid-template-columns:1fr}
+    .analytics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px}.metric{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}.metric label{display:block;color:var(--muted);font-size:.76rem}.metric strong{display:block;font-size:1.55rem;margin-top:5px}.metric small{color:var(--green);font-weight:700}
+    .insights{display:grid;grid-template-columns:1fr 1.4fr;gap:12px;margin-top:12px}.insight{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}.insight h3{margin:0 0 14px;font-size:1rem}.demand-row{display:grid;grid-template-columns:70px 1fr 35px;gap:9px;align-items:center;font-size:.78rem;margin:9px 0}.bar{height:9px;background:#e8eee5;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+    dialog{border:0;border-radius:22px;padding:0;width:min(500px,calc(100% - 30px));box-shadow:0 25px 80px rgba(0,0,0,.25)}dialog::backdrop{background:rgba(10,24,14,.45)}.modal{padding:24px}.modal h2{margin:0 0 4px}.modal p{color:var(--muted);margin-top:0}.field{margin:15px 0}.field label{display:block;font-size:.8rem;color:var(--muted);font-weight:700;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;background:var(--paper)}.field textarea{min-height:74px;resize:vertical}.custom-options{display:grid;gap:9px}.option{display:flex;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px}.option label{display:flex;gap:8px;align-items:center}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:19px}
+    .toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,120px);background:var(--ink);color:#fff;padding:11px 16px;border-radius:999px;transition:.25s;z-index:5;font-size:.85rem}.toast.show{transform:translate(-50%,0)}
+    @media(max-width:980px){.layout{grid-template-columns:1fr}.order-panel{position:static}.orders{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:620px){.app{padding:16px 14px 34px}.topbar{align-items:flex-start;flex-wrap:wrap}.status{font-size:.72rem}.role-switch{order:3;width:100%}.role-switch button{flex:1}.intro{display:block}.date{display:inline-block;margin-top:14px}.menu-panel{padding:18px}.menu-grid{grid-template-columns:1fr}.food{min-height:165px}.orders{grid-template-columns:1fr}.order-panel{padding:18px}.brand .subtle{display:none}.analytics{grid-template-columns:repeat(2,minmax(0,1fr))}.insights{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">Q</span><span>QuickServe <span class="subtle">· hotel order desk</span></span></div>
+      <div class="role-switch" aria-label="Choose app view"><button class="active" data-role="customer">Customer order</button><button data-role="owner">Owner dashboard</button></div>
+      <div class="status"><i></i> Open for orders</div>
+    </header>
+
+    <div class="layout">
+      <section class="panel menu-panel">
+        <div class="intro">
+          <div><div class="subtle">Today’s menu</div><h1>Cook less confusion.<br>Serve more guests.</h1><p>Tap any item to add it. Customize sugar, spice, roast, and extras before sending the order to the kitchen.</p></div>
+          <div class="date" id="today"></div>
+        </div>
+        <nav class="tabs" id="tabs" aria-label="Menu categories"></nav>
+        <div class="menu-grid" id="menuGrid"></div>
+      </section>
+
+      <aside class="panel order-panel customer-only">
+        <div class="order-head"><h2>Current order</h2><span class="count" id="cartCount">0 items</span></div>
+        <div id="cart"><div class="empty"><strong>Your order is empty</strong>Choose food from the menu to get started.</div></div>
+        <div class="total"><span>Total</span><span id="total">₹0</span></div>
+        <button class="primary" id="sendOrder" disabled>Send to kitchen</button>
+        <button class="secondary" id="clearCart" style="width:100%;margin-top:9px">Clear order</button>
+      </aside>
+    </div>
+
+    <section class="desk owner-only">
+      <div class="desk-head"><div><div class="subtle">One-person control panel</div><h2>Live order queue</h2></div><button class="secondary" id="newDay">Start new day</button></div>
+      <div class="analytics" id="analytics"></div>
+      <div class="orders" id="orders"><div class="empty panel" style="grid-column:1/-1">No orders yet. New orders will appear here.</div></div>
+      <div class="insights">
+        <div class="insight"><h3>Top food this week</h3><div id="topFoods"></div></div>
+        <div class="insight"><h3>Demand by day · last 7 days</h3><div id="dayDemand"></div></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="customDialog">
+    <form class="modal" id="customForm" method="dialog">
+      <h2 id="customTitle">Customize item</h2><p id="customBase"></p><input type="hidden" id="customId">
+      <div class="field"><label for="customerName">Customer / table name</label><input id="customerName" placeholder="e.g. Table 3 or Ravi"></div>
+      <div class="field"><label>Choose preferences</label><div class="custom-options" id="customOptions"></div></div>
+      <div class="field"><label for="note">Kitchen note</label><textarea id="note" placeholder="Anything else the cook should know?"></textarea></div>
+      <div class="modal-actions"><button class="secondary" value="cancel">Cancel</button><button class="primary" style="width:auto;margin:0" value="add">Add to order</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const menu=[
+      {id:'tea',name:'Tea',category:'Breakfast',price:15,cost:6,desc:'Hot milk tea, made fresh.',options:[['Sugar', [['Regular',0],['Less sugar',0],['No sugar',0]]],['Strength',[['Regular',0],['Strong',3]]]]},
+      {id:'coffee',name:'Filter coffee',category:'Breakfast',price:25,cost:10,desc:'South Indian filter coffee.',options:[['Sugar',[['Regular',0],['Less sugar',0],['No sugar',0]]],['Strength',[['Regular',0],['Strong',3]]]]},
+      {id:'dosa',name:'Plain dosa',category:'Breakfast',price:45,cost:18,desc:'Crisp dosa with chutney.',options:[['Roast',[['Regular',0],['Double roast',10]]],['Fry',[['Regular',0],['Double fry',8]]]]},
+      {id:'masala',name:'Masala dosa',category:'Breakfast',price:70,cost:30,desc:'Dosa with potato masala.',options:[['Roast',[['Regular',0],['Double roast',10]]],['Fry',[['Regular',0],['Double fry',8]]]]},
+      {id:'idli',name:'Idli (2 pcs)',category:'Breakfast',price:35,cost:14,desc:'Soft idli with sambar.',options:[['Sambar',[['Regular',0],['Extra sambar',8]]]]},
+      {id:'meals',name:'South Indian meals',category:'Lunch',price:120,cost:55,desc:'Rice, curry, dal, vegetables.',options:[['Portion',[['Regular',0],['Extra rice',20]]],['Spice',[['Regular',0],['Less spicy',0]]]]},
+      {id:'rice',name:'Fried rice',category:'Lunch',price:110,cost:48,desc:'Fresh wok-fried rice.',options:[['Spice',[['Regular',0],['Less spicy',0],['Extra spicy',0]]],['Egg',[['No egg',0],['Add egg',20]]]]},
+      {id:'paratha',name:'Paratha',category:'Snacks',price:45,cost:20,desc:'Layered and crisp.',options:[['Roast',[['Regular',0],['Extra roast',8]]]]},
+      {id:'pakoda',name:'Pakoda',category:'Snacks',price:60,cost:25,desc:'Hot seasonal vegetable fritters.',options:[['Spice',[['Regular',0],['Less spicy',0]]]]}
+    ];
+    let cart=[],orders=JSON.parse(localStorage.getItem('quickserve-orders')||'[]'),activeCategory='All',customItem=null;
+    document.querySelectorAll('[data-role]').forEach(button=>button.onclick=()=>{document.body.classList.toggle('owner-view',button.dataset.role==='owner');document.querySelectorAll('[data-role]').forEach(item=>item.classList.toggle('active',item===button));if(button.dataset.role==='owner')renderAnalytics()});
+    const money=n=>`₹${n}`, el=id=>document.getElementById(id), categories=['All',...new Set(menu.map(item=>item.category))];
+    el('today').textContent=new Intl.DateTimeFormat('en-IN',{day:'numeric',month:'short',year:'numeric'}).format(new Date());
+    function renderTabs(){el('tabs').innerHTML=categories.map(c=>`<button class="tab ${c===activeCategory?'active':''}" data-category="${c}">${c}</button>`).join('');document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{activeCategory=b.dataset.category;renderTabs();renderMenu()})}
+    function renderMenu(){const items=menu.filter(i=>activeCategory==='All'||i.category===activeCategory);el('menuGrid').innerHTML=items.map(i=>`<article class="food"><div class="food-top"><h3>${i.name}</h3><span class="price">${money(i.price)}</span></div><span class="veg">● Vegetarian</span><p>${i.desc}</p><button class="add" data-id="${i.id}">Customize & add</button></article>`).join('');document.querySelectorAll('.add').forEach(b=>b.onclick=()=>openCustom(b.dataset.id))}
+    function openCustom(id){customItem=menu.find(i=>i.id===id);el('customId').value=id;el('customTitle').textContent=`Customize ${customItem.name}`;el('customBase').textContent=`Base price ${money(customItem.price)} · choose any preferences below`;el('customerName').value='';el('note').value='';el('customOptions').innerHTML=customItem.options.map(([name,opts],idx)=>`<div class="option"><label>${name}</label><select data-option="${idx}">${opts.map(([label,add],j)=>`<option value="${j}">${label}${add?` (+${money(add)})`:''}</option>`).join('')}</select></div>`).join('');el('customDialog').showModal()}
+    el('customForm').addEventListener('submit',e=>{if(e.submitter?.value!=='add')return;e.preventDefault();const selections=[...document.querySelectorAll('#customOptions select')].map((select,idx)=>{const [label,add]=customItem.options[idx][1][select.value];return {name:customItem.options[idx][0],label,add}});cart.push({key:Date.now(),item:customItem,qty:1,selections,customer:el('customerName').value.trim()||'Walk-in',note:el('note').value.trim()});el('customDialog').close();renderCart();toast(`${customItem.name} added to order`)});
+    function itemTotal(c){return (c.item.price+c.selections.reduce((sum,o)=>sum+o.add,0))*c.qty}
+    function renderCart(){if(!cart.length){el('cart').innerHTML='<div class="empty"><strong>Your order is empty</strong>Choose food from the menu to get started.</div>'}else el('cart').innerHTML=cart.map(c=>`<div class="cart-item"><div class="cart-line"><div><div class="cart-name">${c.item.name} × ${c.qty}</div><div class="cart-meta">${c.selections.map(o=>o.label).join(' · ')}${c.customer?` · ${c.customer}`:''}</div></div><b>${money(itemTotal(c))}</b></div><div class="qty"><button data-action="minus" data-key="${c.key}">−</button><span>${c.qty}</span><button data-action="plus" data-key="${c.key}">+</button><button class="remove" data-action="remove" data-key="${c.key}">Remove</button></div></div>`).join('');const total=cart.reduce((s,c)=>s+itemTotal(c),0);el('total').textContent=money(total);const count=cart.reduce((s,c)=>s+c.qty,0);el('cartCount').textContent=`${count} item${count===1?'':'s'}`;el('sendOrder').disabled=!cart.length;document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>{const c=cart.find(x=>x.key==b.dataset.key);if(b.dataset.action==='plus')c.qty++;if(b.dataset.action==='minus')c.qty--;if(b.dataset.action==='remove'||c.qty<1)cart=cart.filter(x=>x!==c);renderCart()})}
+    el('sendOrder').onclick=()=>{if(!cart.length)return;orders.unshift({id:Math.floor(100+Math.random()*899),timestamp:Date.now(),created:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),items:cart.map(c=>({name:c.item.name,qty:c.qty,details:c.selections.map(o=>o.label).join(', ')})),total:cart.reduce((s,c)=>s+itemTotal(c),0),customer:cart[0].customer,status:'Cooking',paid:false});localStorage.setItem('quickserve-orders',JSON.stringify(orders));cart=[];renderCart();renderOrders();renderAnalytics();toast('Order sent to the kitchen')};
+    el('clearCart').onclick=()=>{cart=[];renderCart()};el('newDay').onclick=()=>{if(confirm('Clear today’s order queue?')){orders=[];localStorage.removeItem('quickserve-orders');renderOrders();toast('New day started')}};
+    function renderOrders(){el('orders').innerHTML=orders.length?orders.map(o=>`<article class="order-card"><h3>Order #${o.id} <span class="subtle">· ${o.created}</span></h3><div class="subtle">${o.customer}</div><ul>${o.items.map(i=>`<li>${i.qty}× ${i.name}${i.details?` <small>(${i.details})</small>`:''}</li>`).join('')}</ul><footer><span class="badge ${o.status==='Ready'?'done':''}">${o.status}</span><label class="cash"><input type="checkbox" data-paid="${o.id}" ${o.paid?'checked':''}> Cash collected</label></footer><div style="display:flex;gap:7px;margin-top:10px"><button class="secondary" style="flex:1" data-status="${o.id}">${o.status==='Cooking'?'Mark ready':'Mark cooking'}</button><b style="align-self:center">${money(o.total)}</b></div></article>`).join(''):'<div class="empty panel" style="grid-column:1/-1">No orders yet. New orders will appear here.</div>';document.querySelectorAll('[data-paid]').forEach(x=>x.onchange=()=>{const o=orders.find(o=>o.id==x.dataset.paid);o.paid=x.checked;localStorage.setItem('quickserve-orders',JSON.stringify(orders));renderOrders();renderAnalytics()});document.querySelectorAll('[data-status]').forEach(x=>x.onclick=()=>{const o=orders.find(o=>o.id==x.dataset.status);o.status=o.status==='Cooking'?'Ready':'Cooking';localStorage.setItem('quickserve-orders',JSON.stringify(orders));renderOrders()})}
+    function renderAnalytics(){const weekStart=Date.now()-6*86400000;const weekOrders=orders.filter(o=>o.timestamp>=weekStart);const revenue=weekOrders.reduce((s,o)=>s+o.total,0);const collected=weekOrders.filter(o=>o.paid).reduce((s,o)=>s+o.total,0);const estimatedCost=weekOrders.reduce((s,o)=>s+o.items.reduce((a,i)=>a+(menu.find(m=>m.name===i.name)?.cost||0)*i.qty,0),0);const profit=revenue-estimatedCost;el('analytics').innerHTML=`<div class="metric"><label>Orders · 7 days</label><strong>${weekOrders.length}</strong><small>Track demand</small></div><div class="metric"><label>Total sales</label><strong>${money(revenue)}</strong><small>All orders</small></div><div class="metric"><label>Cash collected</label><strong>${money(collected)}</strong><small>${money(Math.max(revenue-collected,0))} pending</small></div><div class="metric"><label>Estimated profit</label><strong>${money(profit)}</strong><small>After food cost</small></div>`;const foodCounts={};weekOrders.forEach(o=>o.items.forEach(i=>foodCounts[i.name]=(foodCounts[i.name]||0)+i.qty));const foods=Object.entries(foodCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);el('topFoods').innerHTML=foods.length?foods.map(([name,count])=>`<div class="demand-row"><span>${name}</span><span class="bar"><i style="width:${Math.min(100,count*20)}%"></i></span><b>${count}</b></div>`).join(''):'<div class="subtle">Orders will create your demand report.</div>';const days=[...Array(7)].map((_,i)=>{const d=new Date(Date.now()-(6-i)*86400000);return {label:d.toLocaleDateString('en-IN',{weekday:'short'}),count:weekOrders.filter(o=>new Date(o.timestamp).toDateString()===d.toDateString()).length}});const max=Math.max(...days.map(d=>d.count),1);el('dayDemand').innerHTML=days.map(d=>`<div class="demand-row"><span>${d.label}</span><span class="bar"><i style="width:${d.count/max*100}%"></i></span><b>${d.count}</b></div>`).join('')}
+    let toastTimer;function toast(msg){el('toast').textContent=msg;el('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el('toast').classList.remove('show'),2200)}
+    renderTabs();renderMenu();renderCart();renderOrders();renderAnalytics();
+  </script>
+</body>
+</html>
